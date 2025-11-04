@@ -1,0 +1,519 @@
+/* ===== 全域樣式重置 ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+    "Microsoft JhengHei", sans-serif;
+  color: #333;
+  line-height: 1.6;
+  background: #f8f8f8;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+/* ===== navbar ===== */
+.top-nav {
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 10px 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand-logo {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #000;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 14px;
+  color: #333;
+  text-transform: lowercase;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.nav-link:hover {
+  color: #666;
+}
+
+/* ===== Banner 主視覺區域 ===== */
+.hero-banner {
+  height: 400px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  /* background-image: url("./image/item-photo.png");  替換圖片 */
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.35);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-content {
+  text-align: center;
+  color: #fff;
+}
+
+.hero-title {
+  font-size: 10px;
+  font-weight: 300;
+  margin-bottom: 30px;
+  letter-spacing: 3px;
+}
+
+.hero-btn {
+  background: #fff;
+  color: #333;
+  padding: 14px 32px;
+  font-size: 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hero-btn:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cart-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ===== 主要內容區域 ===== */
+.main-section {
+  max-width: 1400px;
+  margin: 50px auto;
+  padding: 0 40px;
+}
+
+.content-wrapper {
+  display: flex;
+  gap: 40px;
+}
+
+/* ===== 左側篩選欄 ===== */
+.filter-sidebar {
+  flex: 0 0 250px;
+  background: #fff;
+  padding: 30px 20px;
+  border-radius: 8px;
+  height: fit-content;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 100px;
+}
+
+.filter-block {
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.filter-block:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.filter-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #222;
+}
+
+.filter-option {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.filter-option:hover {
+  color: #000;
+}
+
+.filter-option input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.color-picker {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.color-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.color-dot:hover {
+  transform: scale(1.15);
+}
+
+/* ===== 商品網格區域 ===== */
+.product-section {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* .product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+} */
+
+.product-img-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.product-img {
+  width: 100%;
+  padding-top: 133%; /* 3:4 比例 */
+  background: #e5e5e5;
+  /* background-image: url("product-placeholder.jpg"); 替換成商品圖片 */
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.05);
+}
+
+.product-details {
+  padding: 18px;
+}
+
+.product-name {
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #222;
+}
+
+.product-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.pagination-info {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 14px;
+  color: #888;
+}
+
+.page-code {
+  color: #666;
+}
+
+/* ===== 頁尾區域 ===== */
+.footer {
+  background: #222;
+  color: #e0e0e0;
+  margin-top: 80px;
+  padding: 50px 0 0;
+}
+
+.footer-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 改為 3 欄 */
+  gap: 40px;
+  text-align: center;
+}
+
+.footer-column {
+  min-width: 0;
+}
+
+.footer-heading {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+}
+
+.footer-list li {
+  font-size: 14px;
+  color: #b0b0b0;
+}
+
+.footer-list a {
+  transition: color 0.3s ease;
+}
+
+.footer-list a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  width: 100%;
+  margin-top: 50px;
+  padding: 25px 0px;
+  text-align: center;
+}
+
+/* .footer-bottom .footer-container {
+  display: block;
+  text-align: center;
+  padding: 0;
+  grid-template-columns: unset;
+} */
+
+.copyright {
+  font-size: 14px;
+  color: #888;
+}
+
+.pagination-info {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #888;
+}
+
+.page-code {
+  color: #666;
+}
+
+/* -------------- RWD --------------  */
+
+/* (1024px ) */
+@media (max-width: 1024px) {
+  .product-section {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .nav-container {
+    padding: 18px 30px;
+  }
+
+  .main-section {
+    padding: 0 30px;
+  }
+
+  .footer-container {
+    padding: 0 30px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+/*  (768px ) */
+@media (max-width: 768px) {
+  .nav-container {
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px 20px;
+  }
+
+  .brand-logo {
+    font-size: 22px;
+  }
+
+  .nav-menu {
+    gap: 20px;
+    font-size: 13px;
+  }
+
+  .hero-banner {
+    height: 400px;
+  }
+
+  .hero-title {
+    font-size: 40px;
+  }
+
+  .hero-btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  .main-section {
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+
+  .content-wrapper {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .filter-sidebar {
+    flex: none;
+    position: static;
+  }
+
+  .product-section {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .footer-container {
+    padding: 0 20px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+
+  .footer-bottom .footer-container {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
+
+/* 手機尺寸 (480px 以下) */
+@media (max-width: 480px) {
+  .brand-logo {
+    font-size: 20px;
+  }
+
+  .nav-menu {
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-banner {
+    height: 320px;
+  }
+
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .filter-sidebar {
+    padding: 20px 15px;
+  }
+
+  .product-section {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .pagination-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* (360px ) */
+@media (max-width: 360px) {
+  .nav-container {
+    padding: 12px 15px;
+  }
+
+  .main-section {
+    padding: 0 15px;
+  }
+
+  .hero-title {
+    font-size: 28px;
+  }
+
+  .footer-container {
+    padding: 0 15px;
+  }
+}
