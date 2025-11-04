@@ -37,7 +37,7 @@ import Footer from "../components/Footer.vue";
 const products = ref([]);
 
 onMounted(async () => {
-  // 之後從 mock JSON 載入
+  //  mock JSON位置
   products.value = [
     { id: 1, name: "商品名稱 1", price: 1290, image: "" },
     { id: 2, name: "商品名稱 2", price: 1590, image: "" },

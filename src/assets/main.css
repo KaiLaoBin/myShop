@@ -1,4 +1,4 @@
-/* ===== 全域樣式重置 ===== */
+/* ===== 樣式重置 ===== */
 * {
   margin: 0;
   padding: 0;
@@ -333,18 +333,12 @@ button {
 }
 
 .footer-bottom {
+  display: flex;
+  justify-content: center;
   width: 100%;
   margin-top: 50px;
   padding: 25px 0px;
-  text-align: center;
 }
-
-/* .footer-bottom .footer-container {
-  display: block;
-  text-align: center;
-  padding: 0;
-  grid-template-columns: unset;
-} */
 
 .copyright {
   font-size: 14px;
@@ -449,7 +443,7 @@ button {
   }
 }
 
-/* 手機尺寸 (480px 以下) */
+/* 手機(480px 以下) */
 @media (max-width: 480px) {
   .brand-logo {
     font-size: 20px;

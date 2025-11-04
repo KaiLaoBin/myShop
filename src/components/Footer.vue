@@ -20,7 +20,7 @@
       </div>
 
       <div class="footer-column">
-        <h4 class="footer-heading">追蹤我們</h4>
+        <h4 class="footer-heading">聯絡我們</h4>
         <ul class="footer-list">
           <li><a href="#">Facebook</a></li>
           <li><a href="#">Instagram</a></li>
@@ -30,9 +30,7 @@
     </div>
 
     <div class="footer-bottom">
-      <div class="footer-container">
-        <p class="copyright">© 2025 MyBrand. All rights reserved.</p>
-      </div>
+      <p class="copyright">© 2025 MyBrand. All rights reserved.</p>
     </div>
   </footer>
 </template>
