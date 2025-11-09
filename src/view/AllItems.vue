@@ -1,7 +1,7 @@
 <template>
   <div class="all-items">
     <Navbar />
-    <HeroBanner title="循環卡圖" />
+    <HeroBanner title="Creative" />
 
     <main class="main-section">
       <div class="content-wrapper">
@@ -37,7 +37,7 @@ import Footer from "../components/Footer.vue";
 const products = ref([]);
 
 onMounted(async () => {
-  //  mock JSON位置
+  //  mock JSON位置?
   products.value = [
     { id: 1, name: "商品名稱 1", price: 1290, image: "" },
     { id: 2, name: "商品名稱 2", price: 1590, image: "" },
@@ -49,9 +49,8 @@ onMounted(async () => {
     { id: 8, name: "商品名稱 8", price: 1790, image: "" },
   ];
 });
-
+// filter
 const handleFilterChange = (filters) => {
   console.log("篩選條件變更:", filters);
-  // 之後可以根據篩選條件過濾商品
 };
 </script>

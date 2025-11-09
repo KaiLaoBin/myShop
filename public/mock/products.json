@@ -1,0 +1,94 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "黑色長版大衣",
+      "price": 2980,
+      "image": "",
+      "description": "商品描述",
+      "size": "F",
+      "color": "black"
+    },
+    {
+      "id": 2,
+      "name": "白色襯衫",
+      "price": 1280,
+      "image": "",
+      "description": "商品描述",
+      "size": "L",
+      "color": "white"
+    },
+    {
+      "id": 3,
+      "name": "灰色休閒褲",
+      "price": 1580,
+      "image": "",
+      "description": "商品描述",
+      "size": "M",
+      "color": "gray"
+    },
+    {
+      "id": 4,
+      "name": "藍色牛仔外套",
+      "price": 2280,
+      "image": "",
+      "description": "商品描述",
+      "size": "XL",
+      "color": "blue"
+    },
+    {
+      "id": 5,
+      "name": "紅色針織毛衣",
+      "price": 1680,
+      "image": "",
+      "description": "商品描述",
+      "size": "S",
+      "color": "red"
+    },
+    {
+      "id": 6,
+      "name": "咖啡色皮帶",
+      "price": 480,
+      "image": "",
+      "description": "商品描述",
+      "size": "F",
+      "color": "brown"
+    },
+    {
+      "id": 7,
+      "name": "淺綠POLO衫",
+      "price": 980,
+      "image": "",
+      "description": "商品描述",
+      "size": "M",
+      "color": "lightgreen"
+    },
+    {
+      "id": 8,
+      "name": "紫色連帽外套",
+      "price": 1980,
+      "image": "",
+      "description": "商品描述",
+      "size": "L",
+      "color": "purple"
+    },
+    {
+      "id": 9,
+      "name": "卡其色短褲",
+      "price": 880,
+      "image": "",
+      "description": "商品描述",
+      "size": "M",
+      "color": "khaki"
+    },
+    {
+      "id": 10,
+      "name": "深藍襯衫",
+      "price": 1180,
+      "image": "",
+      "description": "商品描述",
+      "size": "L",
+      "color": "navy"
+    }
+  ]
+}
