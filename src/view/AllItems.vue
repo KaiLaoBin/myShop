@@ -37,17 +37,13 @@ import Footer from "../components/Footer.vue";
 const products = ref([]);
 
 onMounted(async () => {
-  //  mock JSON位置?
-  products.value = [
-    { id: 1, name: "商品名稱 1", price: 1290, image: "" },
-    { id: 2, name: "商品名稱 2", price: 1590, image: "" },
-    { id: 3, name: "商品名稱 3", price: 890, image: "" },
-    { id: 4, name: "商品名稱 4", price: 1990, image: "" },
-    { id: 5, name: "商品名稱 5", price: 1290, image: "" },
-    { id: 6, name: "商品名稱 6", price: 2290, image: "" },
-    { id: 7, name: "商品名稱 7", price: 1490, image: "" },
-    { id: 8, name: "商品名稱 8", price: 1790, image: "" },
-  ];
+  try {
+    const response = await fetch("/mock/products.json");
+    const data = await response.json();
+    products.value = data.products;
+  } catch (er) {
+    console.error("資料抓取錯誤:", er);
+  }
 });
 // filter
 const handleFilterChange = (filters) => {

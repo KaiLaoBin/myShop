@@ -22,7 +22,7 @@
     </div>
 
     <!-- 顏色篩選 -->
-    <div class="filter-block">
+    <!-- <div class="filter-block">
       <h3 class="filter-title">顏色</h3>
       <div class="color-picker">
         <div
@@ -33,7 +33,7 @@
           @click="toggleColor(color.value)"
         ></div>
       </div>
-    </div>
+    </div> -->
 
     <!-- 價格篩選 -->
     <div class="filter-block">

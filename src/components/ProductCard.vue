@@ -23,6 +23,6 @@ const props = defineProps({
 
 const handleClick = () => {
   console.log("點擊商品:", props.product.name);
-  // 之後加跳轉到商品詳情頁
+  // 之後加跳轉到商品頁裡
 };
 </script>

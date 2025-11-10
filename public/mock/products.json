@@ -7,7 +7,8 @@
       "image": "",
       "description": "商品描述",
       "size": "F",
-      "color": "black"
+      "color": "black",
+      "category": "外套"
     },
     {
       "id": 2,
@@ -16,7 +17,8 @@
       "image": "",
       "description": "商品描述",
       "size": "L",
-      "color": "white"
+      "color": "white",
+      "category": "上衣"
     },
     {
       "id": 3,
@@ -25,7 +27,8 @@
       "image": "",
       "description": "商品描述",
       "size": "M",
-      "color": "gray"
+      "color": "gray",
+      "category": "長褲"
     },
     {
       "id": 4,
@@ -34,7 +37,8 @@
       "image": "",
       "description": "商品描述",
       "size": "XL",
-      "color": "blue"
+      "color": "blue",
+      "category": "外套"
     },
     {
       "id": 5,
@@ -43,7 +47,8 @@
       "image": "",
       "description": "商品描述",
       "size": "S",
-      "color": "red"
+      "color": "red",
+      "category": "上衣"
     },
     {
       "id": 6,
@@ -52,7 +57,8 @@
       "image": "",
       "description": "商品描述",
       "size": "F",
-      "color": "brown"
+      "color": "brown",
+      "category": "配件"
     },
     {
       "id": 7,
@@ -61,7 +67,8 @@
       "image": "",
       "description": "商品描述",
       "size": "M",
-      "color": "lightgreen"
+      "color": "lightgreen",
+      "category": "上衣"
     },
     {
       "id": 8,
@@ -70,7 +77,8 @@
       "image": "",
       "description": "商品描述",
       "size": "L",
-      "color": "purple"
+      "color": "purple",
+      "category": "外套"
     },
     {
       "id": 9,
@@ -79,7 +87,8 @@
       "image": "",
       "description": "商品描述",
       "size": "M",
-      "color": "khaki"
+      "color": "khaki",
+      "category": "短褲"
     },
     {
       "id": 10,
@@ -88,7 +97,8 @@
       "image": "",
       "description": "商品描述",
       "size": "L",
-      "color": "navy"
+      "color": "navy",
+      "category": "上衣"
     }
   ]
 }
