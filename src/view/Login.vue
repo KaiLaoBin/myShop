@@ -1,32 +1,37 @@
 <template>
-  <div class="auth-container">
-    <h1>Sign in</h1>
-    <form @submit.prevent="onSubmit" class="auth-form">
-      <label>
-        Email
-        <input
-          v-model="email"
-          type="email"
-          required
-          placeholder="you@example.com"
-        />
-      </label>
-      <label>
-        Password
-        <input
-          v-model="password"
-          type="password"
-          required
-          placeholder="••••••••"
-        />
-      </label>
-      <button type="submit">Sign in</button>
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p class="hint">
-        還沒有帳號嗎？
-        <router-link to="/register">註冊</router-link>
-      </p>
-    </form>
+  <div class="home">
+    <Navbar />
+    <HeroBanner title="Creative" />
+    <div class="auth-container">
+      <h1>登入</h1>
+      <form @submit.prevent="onSubmit" class="auth-form">
+        <label>
+          Email
+          <input
+            v-model="email"
+            type="email"
+            required
+            placeholder="you@example.com"
+          />
+        </label>
+        <label>
+          Password
+          <input
+            v-model="password"
+            type="password"
+            required
+            placeholder="••••••••"
+          />
+        </label>
+        <button type="submit">登入</button>
+        <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+        <p class="hint">
+          還沒有帳號嗎？
+          <router-link to="/register">註冊</router-link>
+        </p>
+      </form>
+    </div>
+    <Footer />
   </div>
 </template>
 
@@ -34,6 +39,9 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { loginUser } from "../utils/auth";
+import Navbar from "../components/Navbar.vue";
+import HeroBanner from "../components/HeroBanner.vue";
+import Footer from "../components/Footer.vue";
 const router = useRouter();
 const email = ref("");
 const password = ref("");
@@ -52,7 +60,8 @@ function onSubmit() {
 
 <style scoped>
 .auth-container {
-  max-width: 420px;
+  /* max-width: 420px; */
+  width: 50%;
   margin: 40px auto;
   padding: 24px;
   border: 1px solid #eee;
