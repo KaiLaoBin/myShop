@@ -1,5 +1,5 @@
 <template>
-  <div class="product-card" @click="handleClick">
+  <router-link :to="`/product/${product.id}`" class="product-card">
     <div class="product-img-wrapper">
       <div
         class="product-img"
@@ -10,7 +10,7 @@
       <h3 class="product-name">{{ product.name }}</h3>
       <p class="product-price">NT$ {{ product.price.toLocaleString() }}</p>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script setup>
@@ -20,9 +20,4 @@ const props = defineProps({
     required: true,
   },
 });
-
-const handleClick = () => {
-  console.log("點擊商品:", props.product.name);
-  // 之後加跳轉到商品頁裡
-};
 </script>
