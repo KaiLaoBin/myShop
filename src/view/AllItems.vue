@@ -4,8 +4,21 @@
     <HeroBanner title="Creative" />
 
     <main class="main-section">
+      <button class="filter-toggle-btn" @click="toggleFilterMenu" title="開啟篩選">
+        <svg
+          class="filter-icon"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <path d="M3 4h18v2H3V4zm2 7h14v2H5v-2zm2 7h10v2H7v-2z" />
+        </svg>
+      </button>
       <div class="content-wrapper">
-        <FilterSidebar @filterChange="handleFilterChange" />
+        <FilterSidebar
+          @filterChange="handleFilterChange"
+          :class="{ 'is-open': isFilterMenuOpen }"
+          @close="isFilterMenuOpen = false"
+        />
 
         <div class="product-section">
           <ProductCard
@@ -22,6 +35,11 @@
       </div> -->
     </main>
 
+    <div
+      class="filter-overlay"
+      :class="{ 'is-open': isFilterMenuOpen }"
+      @click="isFilterMenuOpen = false"
+    ></div>
     <Footer />
   </div>
 </template>
@@ -41,6 +59,11 @@ const activeFilters = ref({
   priceRanges: [],
   sortBy: "",
 });
+const isFilterMenuOpen = ref(false);
+
+const toggleFilterMenu = () => {
+  isFilterMenuOpen.value = !isFilterMenuOpen.value;
+};
 
 onMounted(async () => {
   try {

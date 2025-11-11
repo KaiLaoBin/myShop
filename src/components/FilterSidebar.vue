@@ -1,5 +1,6 @@
 <template>
   <aside class="filter-sidebar">
+    <button class="close-filter-btn" @click="$emit('close')">×</button>
     <!-- 價格排序 -->
     <div class="filter-block">
       <h3 class="filter-title">價格排序</h3>
@@ -81,7 +82,7 @@
 <script setup>
 import { reactive, watch } from "vue";
 
-const emit = defineEmits(["filterChange"]);
+const emit = defineEmits(["filterChange", "close"]);
 
 const filters = reactive({
   categories: [],
