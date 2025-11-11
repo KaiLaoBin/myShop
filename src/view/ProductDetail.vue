@@ -25,13 +25,52 @@
             <span class="meta-label">分類</span>
             <span class="meta-value">{{ state.product.category || "-" }}</span>
           </div>
+          <div class="meta-row">
+            <span class="meta-label">庫存</span>
+            <span class="meta-value">
+              {{ displayStockText }}
+            </span>
+          </div>
         </div>
         <div class="description">
           <h2>商品描述</h2>
           <p>{{ state.product.description || "—" }}</p>
         </div>
         <div class="actions">
-          <button class="primary" @click="goBack">返回列表</button>
+          <div class="qty-row">
+            <label class="qty-label" for="qty">數量</label>
+            <input
+              id="qty"
+              class="qty-input"
+              type="number"
+              min="1"
+              :max="state.product.stock ?? undefined"
+              v-model.number="ui.quantity"
+            />
+            <span class="in-cart-tip" v-if="inCartQuantity > 0">
+              已在購物車（數量 {{ inCartQuantity }}）
+            </span>
+          </div>
+          <div class="btn-row">
+            <button
+              class="primary add-btn"
+              :class="{ 'is-adding': ui.isAdding }"
+              :disabled="disableAdd"
+              @click="handleAddToCart"
+            >
+              {{ ui.isAdding ? "加入中..." : "加入購物車" }}
+            </button>
+            <button
+              class="secondary buy-now-btn"
+              :disabled="disableAdd"
+              @click="handleBuyNow"
+            >
+              立即購買
+            </button>
+            <button class="ghost" @click="goBack">返回列表</button>
+          </div>
+          <p v-if="ui.error" class="error-text">{{ ui.error }}</p>
+          <div class="toast" v-if="ui.toastVisible">{{ ui.toastMessage }}</div>
         </div>
       </div>
     </main>
@@ -52,18 +91,28 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, watch } from "vue";
+import { reactive, onMounted, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useCartStore } from "../stores/cartStore";
 import Navbar from "../components/Navbar.vue";
 import HeroBanner from "../components/HeroBanner.vue";
 import Footer from "../components/Footer.vue";
 
 const route = useRoute();
 const router = useRouter();
+const cart = useCartStore();
 
 const state = reactive({
   loaded: false,
   product: null,
+});
+
+const ui = reactive({
+  quantity: 1,
+  isAdding: false,
+  toastVisible: false,
+  toastMessage: "",
+  error: "",
 });
 
 function formatPrice(price) {
@@ -78,7 +127,13 @@ async function loadProduct() {
     const response = await fetch("/mock/products.json");
     const data = await response.json();
     const id = Number(route.params.id);
-    state.product = (data?.products || []).find((p) => Number(p.id) === id) || null;
+    const found =
+      (data?.products || []).find((p) => Number(p.id) === id) || null;
+    // 預設庫存（mock 無庫存欄位時給一個合理值）
+    state.product = found ? { stock: 20, discountPercent: 0, ...found } : null;
+    // 重置 UI 狀態
+    ui.quantity = 1;
+    ui.error = "";
   } catch (err) {
     console.error("讀取商品失敗:", err);
   } finally {
@@ -88,6 +143,70 @@ async function loadProduct() {
 
 function goBack() {
   router.push("/all-items");
+}
+
+const inCartQuantity = computed(() => {
+  if (!state.product) return 0;
+  const item = cart.items.find((i) => i.id === state.product.id);
+  return item?.quantity || 0;
+});
+
+const displayStockText = computed(() => {
+  if (!state.product) return "-";
+  return state.product.stock != null ? `${state.product.stock}` : "—";
+});
+
+const disableAdd = computed(() => {
+  if (!state.product) return true;
+  const q = Number(ui.quantity);
+  if (!Number.isFinite(q) || q <= 0 || !Number.isInteger(q)) return true;
+  if (state.product.stock != null && q + inCartQuantity.value > state.product.stock) {
+    return true;
+  }
+  return ui.isAdding;
+});
+
+function showToast(message) {
+  ui.toastMessage = message;
+  ui.toastVisible = true;
+  setTimeout(() => {
+    ui.toastVisible = false;
+  }, 1600);
+}
+
+async function handleAddToCart() {
+  ui.error = "";
+  ui.isAdding = true;
+  try {
+    cart.addItem(
+      {
+        id: state.product.id,
+        name: state.product.name,
+        price: state.product.price,
+        image: state.product.image || "",
+        stock: state.product.stock,
+        discountPercent: state.product.discountPercent || 0,
+        size: state.product.size,
+        color: state.product.color,
+      },
+      ui.quantity
+    );
+    showToast("已加入購物車");
+  } catch (e) {
+    ui.error = e?.message || "加入購物車失敗";
+  } finally {
+    ui.isAdding = false;
+  }
+}
+
+async function handleBuyNow() {
+  try {
+    await handleAddToCart();
+    // 這裡可導向結帳頁（若未建立 checkout 頁，暫時導向所有商品或保留在此）
+    router.push("/all-items");
+  } catch {
+    // 已在 handleAddToCart 設定錯誤訊息
+  }
 }
 
 onMounted(loadProduct);
@@ -165,6 +284,101 @@ watch(
   color: #fff;
   border-radius: 6px;
   cursor: pointer;
+}
+.secondary {
+  padding: 10px 14px;
+  border: none;
+  background: #333;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.ghost {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #111;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.btn-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 12px;
+}
+.qty-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.qty-label {
+  color: #666;
+  font-size: 14px;
+}
+.qty-input {
+  width: 90px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+.in-cart-tip {
+  font-size: 13px;
+  color: #666;
+}
+.error-text {
+  margin-top: 10px;
+  color: #c00;
+  font-size: 13px;
+}
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  background: rgba(17, 17, 17, 0.95);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  animation: fadeInOut 1.6s ease forwards;
+}
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+}
+.add-btn.is-adding {
+  position: relative;
+  overflow: hidden;
+}
+.add-btn.is-adding::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 1s infinite;
+}
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .not-found,

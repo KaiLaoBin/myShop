@@ -9,7 +9,7 @@
       "size": "F",
       "color": "black",
       "category": "Outerwear",
-      "inStock": 10
+      "stock": 10
     },
     {
       "id": 2,
@@ -20,7 +20,7 @@
       "size": "L",
       "color": "white",
       "category": "Tops",
-      "inStock": 25
+      "stock": 25
     },
     {
       "id": 3,
@@ -31,7 +31,7 @@
       "size": "M",
       "color": "gray",
       "category": "Bottoms",
-      "inStock": 42
+      "stock": 42
     },
     {
       "id": 4,
@@ -42,7 +42,7 @@
       "size": "XL",
       "color": "blue",
       "category": "Outerwear",
-      "inStock": 8
+      "stock": 8
     },
     {
       "id": 5,
@@ -53,7 +53,7 @@
       "size": "S",
       "color": "red",
       "category": "Tops",
-      "inStock": 3
+      "stock": 3
     },
     {
       "id": 6,
@@ -64,7 +64,7 @@
       "size": "F",
       "color": "brown",
       "category": "Accessories",
-      "inStock": 15
+      "stock": 15
     },
     {
       "id": 7,
@@ -75,7 +75,7 @@
       "size": "M",
       "color": "lightgreen",
       "category": "Tops",
-      "inStock": 48
+      "stock": 48
     },
     {
       "id": 8,
@@ -86,7 +86,7 @@
       "size": "L",
       "color": "purple",
       "category": "Outerwear",
-      "inStock": 5
+      "stock": 5
     },
     {
       "id": 9,
@@ -97,7 +97,7 @@
       "size": "M",
       "color": "khaki",
       "category": "Bottoms",
-      "inStock": 22
+      "stock": 22
     },
     {
       "id": 10,
@@ -108,7 +108,7 @@
       "size": "L",
       "color": "navy",
       "category": "Tops",
-      "inStock": 39
+      "stock": 39
     }
   ]
 }
