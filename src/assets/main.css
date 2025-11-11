@@ -225,7 +225,7 @@ button {
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  /* transition: all 0.3s ease; */
+  transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
@@ -436,6 +436,7 @@ button {
   .content-wrapper {
     flex-direction: column;
     gap: 25px;
+    align-items: center;
   }
 
   .filter-sidebar {
@@ -444,6 +445,7 @@ button {
     left: 0;
     width: 80%;
     max-width: 300px;
+
     height: 100%;
     background: #fff;
     z-index: 1200;
@@ -459,14 +461,9 @@ button {
   }
 
   .product-section {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 18px;
-  }
-
-  .product-card {
-    flex: 0 1 calc(50% - 9px);
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
   }
 
   .footer-container {

@@ -34,7 +34,6 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { loginUser } from "../utils/auth";
-
 const router = useRouter();
 const email = ref("");
 const password = ref("");
