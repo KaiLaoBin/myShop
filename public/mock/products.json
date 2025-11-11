@@ -8,7 +8,7 @@
       "description": "商品描述",
       "size": "F",
       "color": "black",
-      "category": "外套"
+      "category": "Outerwear"
     },
     {
       "id": 2,
@@ -18,7 +18,7 @@
       "description": "商品描述",
       "size": "L",
       "color": "white",
-      "category": "上衣"
+      "category": "Tops"
     },
     {
       "id": 3,
@@ -28,7 +28,7 @@
       "description": "商品描述",
       "size": "M",
       "color": "gray",
-      "category": "長褲"
+      "category": "Bottoms"
     },
     {
       "id": 4,
@@ -38,7 +38,7 @@
       "description": "商品描述",
       "size": "XL",
       "color": "blue",
-      "category": "外套"
+      "category": "Outerwear"
     },
     {
       "id": 5,
@@ -48,7 +48,7 @@
       "description": "商品描述",
       "size": "S",
       "color": "red",
-      "category": "上衣"
+      "category": "Tops"
     },
     {
       "id": 6,
@@ -58,7 +58,7 @@
       "description": "商品描述",
       "size": "F",
       "color": "brown",
-      "category": "配件"
+      "category": "Accessories"
     },
     {
       "id": 7,
@@ -68,7 +68,7 @@
       "description": "商品描述",
       "size": "M",
       "color": "lightgreen",
-      "category": "上衣"
+      "category": "Tops"
     },
     {
       "id": 8,
@@ -78,7 +78,7 @@
       "description": "商品描述",
       "size": "L",
       "color": "purple",
-      "category": "外套"
+      "category": "Outerwear"
     },
     {
       "id": 9,
@@ -88,7 +88,7 @@
       "description": "商品描述",
       "size": "M",
       "color": "khaki",
-      "category": "短褲"
+      "category": "Bottoms"
     },
     {
       "id": 10,
@@ -98,7 +98,7 @@
       "description": "商品描述",
       "size": "L",
       "color": "navy",
-      "category": "上衣"
+      "category": "Tops"
     }
   ]
 }

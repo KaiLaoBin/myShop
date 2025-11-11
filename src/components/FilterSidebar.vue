@@ -1,39 +1,59 @@
 <template>
   <aside class="filter-sidebar">
+    <!-- 價格排序 -->
+    <div class="filter-block">
+      <h3 class="filter-title">價格排序</h3>
+      <select v-model="filters.sortBy" class="filter-select">
+        <option value="">預設</option>
+        <option value="price-asc">價格由低到高</option>
+        <option value="price-desc">價格由高到低</option>
+      </select>
+    </div>
+
     <!-- 類別篩選 -->
     <div class="filter-block">
       <h3 class="filter-title">類別</h3>
       <label class="filter-option">
-        <input type="checkbox" v-model="filters.categories" value="tops" />
+        <input type="checkbox" v-model="filters.categories" value="Tops" />
         上衣
       </label>
       <label class="filter-option">
-        <input type="checkbox" v-model="filters.categories" value="bottoms" />
-        褲子
+        <input type="checkbox" v-model="filters.categories" value="Bottoms" />
+        下身
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" v-model="filters.categories" value="Outerwear" />
+        外套
       </label>
       <label class="filter-option">
         <input
           type="checkbox"
           v-model="filters.categories"
-          value="accessories"
+          value="Accessories"
         />
         配件
       </label>
     </div>
 
-    <!-- 顏色篩選 -->
-    <!-- <div class="filter-block">
-      <h3 class="filter-title">顏色</h3>
-      <div class="color-picker">
-        <div
-          v-for="color in colors"
-          :key="color.value"
-          class="color-dot"
-          :style="{ backgroundColor: color.hex }"
-          @click="toggleColor(color.value)"
-        ></div>
-      </div>
-    </div> -->
+    <!-- 尺寸篩選 -->
+    <div class="filter-block">
+      <h3 class="filter-title">尺寸</h3>
+      <label class="filter-option">
+        <input type="checkbox" v-model="filters.sizes" value="S" /> S
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" v-model="filters.sizes" value="M" /> M
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" v-model="filters.sizes" value="L" /> L
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" v-model="filters.sizes" value="XL" /> XL
+      </label>
+      <label class="filter-option">
+        <input type="checkbox" v-model="filters.sizes" value="F" /> F
+      </label>
+    </div>
 
     <!-- 價格篩選 -->
     <div class="filter-block">
@@ -59,31 +79,22 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
+
+const emit = defineEmits(["filterChange"]);
 
 const filters = reactive({
   categories: [],
-  colors: [],
+  sizes: [],
   priceRanges: [],
+  sortBy: "",
 });
 
-const colors = [
-  { value: "black", hex: "#000000" },
-  { value: "white", hex: "#FFFFFF" },
-  { value: "red", hex: "#FF0000" },
-  { value: "blue", hex: "#0000FF" },
-  { value: "green", hex: "#00FF00" },
-];
-
-const toggleColor = (color) => {
-  const index = filters.colors.indexOf(color);
-  if (index > -1) {
-    filters.colors.splice(index, 1);
-  } else {
-    filters.colors.push(color);
-  }
-};
-
-// emit 篩選條件給父組件
-const emit = defineEmits(["filterChange"]);
+watch(
+  filters,
+  (newFilters) => {
+    emit("filterChange", newFilters);
+  },
+  { deep: true }
+);
 </script>
