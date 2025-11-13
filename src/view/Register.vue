@@ -40,7 +40,7 @@
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
         <p class="hint">
           已經有帳號了嗎？
-          <router-link to="/login">登入</router-link>
+          <router-link to="/login" class="hint-link">登入</router-link>
         </p>
       </form>
     </div>

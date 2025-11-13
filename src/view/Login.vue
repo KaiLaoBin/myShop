@@ -27,7 +27,7 @@
         <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
         <p class="hint">
           還沒有帳號嗎？
-          <router-link to="/register">註冊</router-link>
+          <router-link to="/register" class="hint-link">註冊</router-link>
         </p>
       </form>
     </div>

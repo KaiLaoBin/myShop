@@ -5,8 +5,21 @@
 
     <main class="detail-container" v-if="state.loaded && state.product">
       <div class="gallery">
-        <div class="image-placeholder">
-          <!-- 圖片暫留空 -->
+        <img
+          v-if="state.product.image"
+          :src="state.product.image"
+          :alt="state.product.name"
+          style="
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #f5f5f5;
+          "
+        />
+        <div v-else class="image-placeholder">
+          <!-- 圖片不存在 -->
         </div>
       </div>
       <div class="info">
@@ -160,7 +173,10 @@ const disableAdd = computed(() => {
   if (!state.product) return true;
   const q = Number(ui.quantity);
   if (!Number.isFinite(q) || q <= 0 || !Number.isInteger(q)) return true;
-  if (state.product.stock != null && q + inCartQuantity.value > state.product.stock) {
+  if (
+    state.product.stock != null &&
+    q + inCartQuantity.value > state.product.stock
+  ) {
     return true;
   }
   return ui.isAdding;
@@ -369,7 +385,12 @@ watch(
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   animation: shimmer 1s infinite;
 }
 @keyframes shimmer {

@@ -256,4 +256,16 @@ onBeforeUnmount(() => {
   opacity: 0;
   transform: translateY(6px);
 }
+
+@media (max-width: 768px) {
+  .cart-preview {
+    right: -180px;
+    /* width: 100%; */
+  }
+}
+@media (max-width: 480px) {
+  .cart-preview {
+    display: none;
+  }
+}
 </style>

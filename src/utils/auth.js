@@ -46,12 +46,19 @@ export function loginUser({ email, password }) {
   }
   localStorage.setItem("currentUser", JSON.stringify(user));
   window.dispatchEvent(new Event("storage"));
+  
+  // 觸發購物車同步事件（讓 store 知道需要同步）
+  window.dispatchEvent(new CustomEvent("cart:sync-on-login", { detail: { user } }));
+  
   return user;
 }
 
 export function logoutUser() {
   localStorage.removeItem("currentUser");
   window.dispatchEvent(new Event("storage"));
+  
+  // 觸發購物車登出事件（可選：清空或保留本地購物車）
+  window.dispatchEvent(new CustomEvent("cart:sync-on-logout"));
 }
 
 

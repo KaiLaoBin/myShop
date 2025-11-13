@@ -8,11 +8,17 @@
         <strong>提醒：</strong>
         瀏覽器目前無法儲存購物車資料，離開頁面後將遺失內容。請啟用本地儲存或換用其他瀏覽器。
       </div>
+      <div v-if="!cart.storageAvailable" class="storage-alert">
+        <strong>提醒：</strong>
+        瀏覽器目前無法儲存購物車資料，離開頁面後將遺失內容。請啟用本地儲存或換用其他瀏覽器。
+      </div>
       <section v-if="cart.items.length === 0" class="empty-state">
         <div class="empty-icon">🛒</div>
-        <h2>購物車還是空的</h2>
+        <p class="cart-empty-text">購物車還是空的</p>
+        <br />
         <p>來去逛逛，挑選喜歡的商品吧！</p>
-        <button class="primary" @click="continueShopping">繼續購物</button>
+        <br />
+        <button class="primary" @click="continueShopping">來去購物</button>
       </section>
 
       <section v-else class="cart-content">
@@ -28,15 +34,23 @@
             </label>
             <button
               class="link-btn"
-              :disabled="selectedIds.length === 0"
+              :disabled="isBatchDisabled()"
               @click="handleBatchRemove"
             >
+              <span v-if="isBatchProcessing" class="mini-spinner"></span>
               移除選擇項目
             </button>
           </div>
 
-          <ul class="item-list">
-            <li v-for="item in cart.items" :key="item.id" class="item-card">
+          <TransitionGroup class="item-list" tag="ul" name="list-fade">
+            <li
+              v-for="item in cart.items"
+              :key="item.id"
+              :class="['item-card', itemClasses(item)]"
+            >
+              <div v-if="isProcessing(item.id)" class="item-loading">
+                <span class="mini-spinner"></span>
+              </div>
               <div class="item-select">
                 <input
                   type="checkbox"
@@ -93,7 +107,11 @@
                 <div class="qty-control">
                   <button
                     @click="decreaseQuantity(item)"
-                    :disabled="item.quantity <= 1 || item.unavailable"
+                    :disabled="
+                      item.quantity <= 1 ||
+                      item.unavailable ||
+                      isProcessing(item.id)
+                    "
                   >
                     −
                   </button>
@@ -104,11 +122,14 @@
                     v-model.number="quantityDrafts[item.id]"
                     @change="commitQuantity(item)"
                     @blur="commitQuantity(item)"
-                    :disabled="item.unavailable"
+                    @keydown="handleQuantityKeydown($event, item)"
+                    @wheel="handleQuantityWheel(item, $event)"
+                    :disabled="item.unavailable || isProcessing(item.id)"
+                    :class="qtyClasses(item)"
                   />
                   <button
                     @click="increaseQuantity(item)"
-                    :disabled="item.unavailable"
+                    :disabled="item.unavailable || isProcessing(item.id)"
                   >
                     ＋
                   </button>
@@ -124,12 +145,21 @@
                 >
               </div>
               <div class="item-remove">
-                <button class="link-btn" @click="confirmRemove(item)">
+                <button
+                  class="link-btn"
+                  :class="{ loading: isRemoveDisabled(item) }"
+                  @click="confirmRemove(item)"
+                  :disabled="isRemoveDisabled(item)"
+                >
+                  <span
+                    v-if="isRemoveDisabled(item)"
+                    class="mini-spinner"
+                  ></span>
                   移除
                 </button>
               </div>
             </li>
-          </ul>
+          </TransitionGroup>
         </div>
 
         <aside class="cart-summary">
@@ -152,15 +182,17 @@
           <p class="free-shipping-hint" v-if="shippingFee > 0">
             再買 NT$ {{ freeShippingGap.toLocaleString() }} 即可免運
           </p>
-          <div class="summary-total">
+          <div :class="['summary-total', subtotalClasses()]">
             <span>應付總額</span>
             <span>NT$ {{ total.toLocaleString() }}</span>
           </div>
           <button
             class="checkout-btn"
-            :disabled="cart.items.length === 0"
+            :class="{ loading: isCheckoutProcessing }"
+            :disabled="isCheckoutDisabled()"
             @click="goToCheckout"
           >
+            <span v-if="isCheckoutProcessing" class="btn-spinner"></span>
             前往結帳
           </button>
           <button class="ghost-btn" @click="continueShopping">繼續購物</button>
@@ -185,6 +217,11 @@ const cart = useCartStore();
 
 const selectedIds = ref([]);
 const quantityDrafts = reactive({});
+const processingItems = ref([]);
+const isBatchProcessing = ref(false);
+const isCheckoutProcessing = ref(false);
+const totalHighlight = ref(false);
+const quantityPulse = reactive({});
 
 const subtotal = computed(() => cart.subtotal);
 const totalQuantity = computed(() => cart.totalQuantity);
@@ -197,6 +234,24 @@ const allSelected = computed(
   () => cart.items.length > 0 && selectedIds.value.length === cart.items.length
 );
 
+let totalsInitialized = false;
+watch(
+  () => subtotal.value,
+  () => {
+    if (!totalsInitialized) {
+      totalsInitialized = true;
+      return;
+    }
+    totalHighlight.value = false;
+    requestAnimationFrame(() => {
+      totalHighlight.value = true;
+      setTimeout(() => {
+        totalHighlight.value = false;
+      }, 450);
+    });
+  }
+);
+
 watch(
   () => cart.items,
   (items) => {
@@ -206,13 +261,62 @@ watch(
         delete quantityDrafts[id];
       }
     });
+    Object.keys(quantityPulse).forEach((id) => {
+      if (!existingIds.has(Number(id))) {
+        delete quantityPulse[id];
+      }
+    });
     items.forEach((item) => {
       quantityDrafts[item.id] = item.quantity;
+      if (!Object.prototype.hasOwnProperty.call(quantityPulse, item.id)) {
+        quantityPulse[item.id] = false;
+      }
     });
     selectedIds.value = selectedIds.value.filter((id) => existingIds.has(id));
+    processingItems.value = processingItems.value.filter((id) =>
+      existingIds.has(id)
+    );
   },
   { deep: true, immediate: true }
 );
+
+function startProcessing(id) {
+  if (id == null) return;
+  if (!processingItems.value.includes(id)) {
+    processingItems.value = [...processingItems.value, id];
+  }
+}
+
+function stopProcessing(id) {
+  if (id == null) return;
+  processingItems.value = processingItems.value.filter(
+    (existing) => existing !== id
+  );
+}
+
+function isProcessing(id) {
+  return processingItems.value.includes(id);
+}
+
+function pulseQuantity(id) {
+  if (id == null) return;
+  quantityPulse[id] = false;
+  requestAnimationFrame(() => {
+    quantityPulse[id] = true;
+    setTimeout(() => {
+      quantityPulse[id] = false;
+    }, 320);
+  });
+}
+
+function withItemProcessing(id, action) {
+  startProcessing(id);
+  try {
+    action();
+  } finally {
+    setTimeout(() => stopProcessing(id), 200);
+  }
+}
 
 function toggleSelection(id, checked) {
   if (checked) {
@@ -234,40 +338,59 @@ function toggleSelectAll(checked) {
 
 function confirmRemove(item) {
   if (window.confirm(`確定要移除「${item.name}」嗎？`)) {
-    cart.removeItem(item.id);
+    withItemProcessing(item.id, () => {
+      cart.removeItem(item.id);
+      selectedIds.value = selectedIds.value.filter((id) => id !== item.id);
+    });
   }
 }
 
 function handleBatchRemove() {
   if (selectedIds.value.length === 0) return;
+  if (isBatchProcessing.value) return;
   if (
     window.confirm(`確定要移除選擇的 ${selectedIds.value.length} 項商品嗎？`)
   ) {
-    selectedIds.value.forEach((id) => cart.removeItem(id));
-    selectedIds.value = [];
+    isBatchProcessing.value = true;
+    selectedIds.value.forEach((id) => startProcessing(id));
+    try {
+      selectedIds.value.forEach((id) => cart.removeItem(id));
+      selectedIds.value = [];
+    } finally {
+      setTimeout(() => {
+        processingItems.value = [];
+        isBatchProcessing.value = false;
+      }, 200);
+    }
   }
 }
 
 function increaseQuantity(item) {
-  if (item.unavailable) return;
+  if (item.unavailable || isProcessing(item.id)) return;
   try {
-    cart.addItem(item, 1);
+    withItemProcessing(item.id, () => {
+      cart.addItem(item, 1);
+      pulseQuantity(item.id);
+    });
   } catch (err) {
     window.alert(err?.message || "更新數量失敗");
   }
 }
 
 function decreaseQuantity(item) {
-  if (item.quantity <= 1 || item.unavailable) return;
+  if (item.quantity <= 1 || item.unavailable || isProcessing(item.id)) return;
   try {
-    cart.decreaseItem(item.id, 1);
+    withItemProcessing(item.id, () => {
+      cart.decreaseItem(item.id, 1);
+      pulseQuantity(item.id);
+    });
   } catch (err) {
     window.alert(err?.message || "更新數量失敗");
   }
 }
 
 function commitQuantity(item) {
-  if (item.unavailable) {
+  if (item.unavailable || isProcessing(item.id)) {
     quantityDrafts[item.id] = item.quantity;
     return;
   }
@@ -282,7 +405,10 @@ function commitQuantity(item) {
     return;
   }
   try {
-    cart.updateQuantity(item.id, draft);
+    withItemProcessing(item.id, () => {
+      cart.updateQuantity(item.id, draft);
+      pulseQuantity(item.id);
+    });
   } catch (err) {
     window.alert(err?.message || "更新數量失敗");
     quantityDrafts[item.id] = item.quantity;
@@ -293,20 +419,75 @@ function acknowledgePrice(item) {
   cart.acknowledgePriceChange(item.id);
 }
 
+function handleQuantityKeydown(event, item) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    commitQuantity(item);
+  } else if (event.key === "Escape") {
+    event.preventDefault();
+    quantityDrafts[item.id] = item.quantity;
+  }
+}
+
+function handleQuantityWheel(item, event) {
+  if (item.unavailable || isProcessing(item.id)) return;
+  event.preventDefault();
+  if (event.deltaY < 0) {
+    increaseQuantity(item);
+  } else if (event.deltaY > 0) {
+    decreaseQuantity(item);
+  }
+}
+
 function goToProduct(id) {
   router.push(`/product/${id}`);
 }
 
 function goToCheckout() {
-  if (router.hasRoute("Checkout")) {
-    router.push({ name: "Checkout" });
-  } else {
-    router.push("/all-items");
-  }
+  if (isCheckoutProcessing.value) return;
+  isCheckoutProcessing.value = true;
+  setTimeout(() => {
+    if (router.hasRoute("Checkout")) {
+      router.push({ name: "Checkout" });
+    } else {
+      router.push("/all-items");
+    }
+    isCheckoutProcessing.value = false;
+  }, 250);
 }
 
 function continueShopping() {
   router.push("/all-items");
+}
+
+function isCheckoutDisabled() {
+  return cart.items.length === 0 || isCheckoutProcessing.value;
+}
+
+function isBatchDisabled() {
+  return selectedIds.value.length === 0 || isBatchProcessing.value;
+}
+
+function isRemoveDisabled(item) {
+  return isProcessing(item.id);
+}
+
+function itemClasses(item) {
+  return {
+    "is-processing": isProcessing(item.id),
+  };
+}
+
+function qtyClasses(item) {
+  return {
+    pulse: quantityPulse[item.id],
+  };
+}
+
+function subtotalClasses() {
+  return {
+    highlight: totalHighlight.value,
+  };
 }
 </script>
 
@@ -365,6 +546,10 @@ function continueShopping() {
   color: #444;
   cursor: pointer;
 }
+.link-btn.loading {
+  color: #999;
+  pointer-events: none;
+}
 .link-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -386,6 +571,16 @@ function continueShopping() {
   border: 1px solid #eee;
   border-radius: 10px;
   background: #fff;
+  position: relative;
+}
+.item-card.is-processing {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.item-loading {
+  position: absolute;
+  top: 12px;
+  right: 12px;
 }
 .item-thumb {
   cursor: pointer;
@@ -444,6 +639,12 @@ function continueShopping() {
   border: 1px solid #ccc;
   border-radius: 6px;
   text-align: center;
+}
+.qty-control input.pulse {
+  animation: qtyPulse 0.3s ease;
+}
+.qty-control input:disabled {
+  background: #f8f8f8;
 }
 .stock-hint {
   margin-top: 6px;
@@ -514,6 +715,32 @@ function continueShopping() {
   cursor: pointer;
   margin-top: 12px;
 }
+.checkout-btn.loading {
+  position: relative;
+  pointer-events: none;
+}
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+.mini-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(17, 17, 17, 0.25);
+  border-top-color: #111;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
 .checkout-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -527,6 +754,10 @@ function continueShopping() {
   border-radius: 8px;
   cursor: pointer;
   margin-top: 8px;
+}
+.cart-empty-text {
+  font: 900;
+  font-size: 24px;
 }
 
 @media (max-width: 1024px) {
@@ -563,6 +794,93 @@ function continueShopping() {
   .item-remove {
     grid-area: remove;
     justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .cart-page {
+    padding: 0 12px 48px;
+  }
+  .item-card {
+    position: relative;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "thumb"
+      "info"
+      "qty"
+      "subtotal"
+      "remove";
+    padding-left: 16px;
+  }
+  .item-select {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+  }
+  .item-thumb {
+    grid-area: thumb;
+    justify-self: center;
+  }
+  .item-info {
+    grid-area: info;
+  }
+  .item-quantity {
+    grid-area: qty;
+  }
+  .item-subtotal {
+    grid-area: subtotal;
+    justify-self: flex-end;
+  }
+  .item-remove {
+    grid-area: remove;
+    justify-content: flex-end;
+  }
+}
+
+.list-fade-enter-active,
+.list-fade-leave-active {
+  transition: all 0.25s ease;
+}
+.list-fade-enter-from,
+.list-fade-leave-to {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+@keyframes qtyPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.summary-total.highlight {
+  animation: totalHighlight 0.45s ease;
+}
+.summary-total.highlight span:last-child {
+  display: inline-block;
+  background: rgba(17, 17, 17, 0.08);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+@keyframes totalHighlight {
+  0% {
+    background-color: rgba(17, 17, 17, 0.1);
+  }
+  100% {
+    background-color: transparent;
   }
 }
 </style>

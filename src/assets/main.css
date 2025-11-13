@@ -78,7 +78,7 @@ button {
 .hero-banner {
   height: 400px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  /* background-image: url("./image/item-photo.png");  替換圖片 */
+  background-image: url("/public/images/banners/hero-banner.png");
   background-size: cover;
   background-position: center;
   position: relative;
@@ -373,6 +373,12 @@ button {
   background-color: #fff;
   font-size: 14px;
   cursor: pointer;
+}
+.hint-link {
+  font-size: 18px;
+}
+.hint-link:hover {
+  text-decoration: underline;
 }
 /* -------------- RWD --------------  */
 
